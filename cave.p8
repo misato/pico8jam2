@@ -87,7 +87,7 @@ player.update = function()
         update_player_frames()
         update_player_coords()
     else
-        player.frames = 1 
+        player.frames = 1 -- idle position
     end 
 end
 
