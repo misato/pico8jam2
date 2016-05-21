@@ -170,7 +170,7 @@ function update_splash()
 end
 
 function draw_splash() 
-   write_centered_text("press a button")
+   write_centered_text("press any button")
 end
 
 
