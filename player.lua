@@ -38,31 +38,31 @@ function handle_player_input()
     return is_moving
 end
 
+-- there is a wall around the room. wall is 1 tile width
+WALL_SIZE = 8
+
 function update_player_coords() 
     if player.position == PLAYER_DOWN then
-        player.y += 1
-        if player.y > SCREEN_SIZE then
-            player.y = 0
+        if player.y + 1  < SCREEN_SIZE - WALL_SIZE then
+            player.y += 1
         end
 
     elseif player.position == PLAYER_UP then
-        player.y -= 1
-        if player.y < 0 then 
-            player.y = SCREEN_SIZE
+        if player.y - 1 > 0 + WALL_SIZE then
+            player.y -= 1
         end
 
     elseif player.position == PLAYER_RIGHT then
-        player.x += 1
-        if player.x > SCREEN_SIZE then
-            player.x = 0
-        end
+        if player.x + 1 < SCREEN_SIZE - WALL_SIZE then
+            player.x += 1
+        end 
 
     elseif player.position == PLAYER_LEFT then
-        player.x -= 1
-        if player.x < 0 then 
-            player.x = SCREEN_SIZE
+        if player.x - 1 > 0 + WALL_SIZE then
+            player.x -= 1
         end
     end
+
 end
 
 player = {}
