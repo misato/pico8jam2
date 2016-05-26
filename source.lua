@@ -8,8 +8,8 @@ POSITION_UP = 2
 POSITION_RIGHT = 3
 POSITION_LEFT = 4
 
-
-
+include src/class.lua
+include src/entity.lua
 include src/player.lua
 include src/enemy.lua
 
