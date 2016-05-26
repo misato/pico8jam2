@@ -1,8 +1,17 @@
 -- Global 
 
-SCREEN_SIZE = 128 -- same width than height so no need for 2 vars ;) 
+SCREEN_SIZE = 120 -- same width than height so no need for 2 vars ;) 
 
-include player.lua
+-- defined here so it's easier to work with positions later
+POSITION_DOWN = 1
+POSITION_UP = 2
+POSITION_RIGHT = 3
+POSITION_LEFT = 4
+
+
+
+include src/player.lua
+include src/enemy.lua
 
 -- state machine 
 
@@ -18,7 +27,17 @@ state = game_states.splash
 
 function change_state() 
     cls()
-    if state == game_states.splash then   
+    if state == game_states.splash then 
+        -- change from splash to game
+        -- spawn some enemies
+        -- for i=1,5 do
+        --     spawn_enemy()  
+        -- end
+        spawn_enemy(POSITION_DOWN)
+        spawn_enemy(POSITION_LEFT)
+        spawn_enemy(POSITION_RIGHT)
+        spawn_enemy(POSITION_UP)
+        
         state = game_states.game
     elseif state == game_states.game then
         state = game_states.gameover 
@@ -73,11 +92,13 @@ end
 
 function update_game()
     player.update()
+    enemies_update()
 end
 
 function draw_game()
     map(0,0)
     player.draw()
+    enemies_draw()
 end
 
 
