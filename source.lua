@@ -9,7 +9,6 @@ POSITION_RIGHT = 3
 POSITION_LEFT = 4
 
 
-
 include src/player.lua
 include src/enemy.lua
 
@@ -30,13 +29,10 @@ function change_state()
     if state == game_states.splash then 
         -- change from splash to game
         -- spawn some enemies
-        -- for i=1,5 do
-        --     spawn_enemy()  
-        -- end
+        spawn_enemy(POSITION_UP)
         spawn_enemy(POSITION_DOWN)
         spawn_enemy(POSITION_LEFT)
         spawn_enemy(POSITION_RIGHT)
-        spawn_enemy(POSITION_UP)
         
         state = game_states.game
     elseif state == game_states.game then
