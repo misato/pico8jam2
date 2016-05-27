@@ -5,43 +5,46 @@ ENEMY_TYPE_2 = 2
 ENEMY_TYPE_3 = 3
 ENEMY_TYPE_4 = 4
 
--- Enemy = {}
--- Enemy.__index = Enemy
+-- child = setmetatable({},{__index=parent})
 
--- function Enemy.create(enemy_type, position)
--- 	local new_enemy = {}
--- 	setmetatable(new_enemy, Enemy)
+Enemy = {}
+Enemy.__index = Entity
 
--- 	new_enemy.frames = 0
--- 	new_enemy.type = enemy_type
+function Enemy.create(enemy_type, position)
+	local new_enemy = {}
 
--- 	if enemy_type == ENEMY_TYPE_1 then
--- 		new_enemy.sprite = {80,82,84}
--- 	elseif enemy_type == ENEMY_TYPE_2 then
--- 		new_enemy.sprite = {86,88,90}
--- 	elseif enemy_type == ENEMY_TYPE_3 then
--- 		new_enemy.sprite = {99,101,103}
--- 	elseif enemy_type == ENEMY_TYPE_4 then
--- 		new_enemy.sprite = {105,107,109}
--- 	end
+	setmetatable(new_enemy, Enemy)
 
--- 	new_enemy.position = position
--- 	if position == POSITION_DOWN then 
--- 		new_enemy.x = 60
--- 		new_enemy.y = 0
--- 	elseif position == POSITION_UP then 
--- 		new_enemy.x = 60
--- 		new_enemy.y = 120
--- 	elseif position == POSITION_LEFT then 
--- 		new_enemy.x = 120
--- 		new_enemy.y = 60
--- 	elseif position == POSITION_RIGHT then 
--- 		new_enemy.x = 0
--- 		new_enemy.y = 60
--- 	end
+    new_enemy.frames = 0
 
--- 	return new_enemy
--- end
+	new_enemy.type = enemy_type
+	if enemy_type == ENEMY_TYPE_1 then
+		new_enemy.sprite = {80,82,84}
+	elseif enemy_type == ENEMY_TYPE_2 then
+		new_enemy.sprite = {86,88,90}
+	elseif enemy_type == ENEMY_TYPE_3 then
+		new_enemy.sprite = {99,101,103}
+	elseif enemy_type == ENEMY_TYPE_4 then
+		new_enemy.sprite = {105,107,109}
+	end
+
+	new_enemy.position = position
+	if position == POSITION_DOWN then 
+		new_enemy.x = 60
+		new_enemy.y = 0
+	elseif position == POSITION_UP then 
+		new_enemy.x = 60
+		new_enemy.y = 120
+	elseif position == POSITION_LEFT then 
+		new_enemy.x = 120
+		new_enemy.y = 60
+	elseif position == POSITION_RIGHT then 
+		new_enemy.x = 0
+		new_enemy.y = 60
+	end
+
+	return new_enemy
+end
 
 -- function Enemy:update()
 -- 	self:update_frames()
@@ -49,7 +52,6 @@ ENEMY_TYPE_4 = 4
 -- end
 
 -- function Enemy:update_frames()
---     -- Use local because it's faster
 --     local frame = self.frames
 --     frame += 0.1
 --     if flr(frame) == 3 then 
@@ -109,20 +111,6 @@ ENEMY_TYPE_4 = 4
 -- end
 
 
-Enemy = class(Entity, function (e, position, maxframes, update_speed, enemy_type)
-		Entity.init(position, maxframes, update_speed)
-		e.type = enemy_type
-		if enemy_type == ENEMY_TYPE_1 then
-			e.sprite = {80,82,84}
-		elseif enemy_type == ENEMY_TYPE_2 then
-			e.sprite = {86,88,90}
-		elseif enemy_type == ENEMY_TYPE_3 then
-			e.sprite = {99,101,103}
-		elseif enemy_type == ENEMY_TYPE_4 then
-			e.sprite = {105,107,109}
-		end
-end)
-
 -- function Enemy.create(position, enemy_type)
 -- 	local new_enemy = Entity.init(position, 2, 0.1)
 -- 	new_enemy.type = enemy_type
@@ -161,7 +149,7 @@ enemy_list = {}
 function spawn_enemy(position) 
 	-- Create new enemy
 	local enemy_type = flr(rnd(4)) + 1
-	new_enemy = Enemy(position, 2, 0.1, enemy_type)
+	new_enemy = Enemy.create(position, enemy_type)
 	add(enemy_list, new_enemy)
 end
 

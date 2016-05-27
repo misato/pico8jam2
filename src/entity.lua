@@ -1,54 +1,22 @@
 -- Entity class
 -- Player and Enemy will inherit from this one
 
-Entity = class(function(e, position, maxframes, update_speed)
-        e.frames = 0
-        e.maxframes = maxframes
-        e.update_speed = update_speed
+Entity = {}
+Entity.__index = Entity
 
-        e.position = position
+function Entity.create()
+    local entity = {}
 
-        if position == POSITION_DOWN then 
-            e.x = 60
-            e.y = 0
-        elseif position == POSITION_UP then 
-            e.x = 60
-            e.y = 120
-        elseif position == POSITION_LEFT then 
-            e.x = 120
-            e.y = 60
-        elseif position == POSITION_RIGHT then 
-            e.x = 0
-            e.y = 60
-        end
-    end)
+    setmetatable(entity, Entity)
 
--- function Entity.create(position, maxframes, update_speed)
---     local entity = {}
---     setmetatable(entity, Entity)
+    entity.x = 60
+    entity.y = 60
+    entity.frames = 0
 
---     entity.frames = 0
---     entity.maxframes = maxframes
---     entity.update_speed = update_speed
+    entity.position = POSITION_DOWN
 
---     entity.position = position
-
---     if position == POSITION_DOWN then 
---         entity.x = 60
---         entity.y = 0
---     elseif position == POSITION_UP then 
---         entity.x = 60
---         entity.y = 120
---     elseif position == POSITION_LEFT then 
---         entity.x = 120
---         entity.y = 60
---     elseif position == POSITION_RIGHT then 
---         entity.x = 0
---         entity.y = 60
---     end
-
---     return entity
--- end
+    return entity
+end
 
 function Entity:update()
     self:update_frames()
@@ -57,8 +25,8 @@ end
 
 function Entity:update_frames()
     local frame = self.frames
-    frame += self.update_speed
-    if flr(frame) == self.maxframes then 
+    frame += 0.2
+    if flr(frame) == 3 then 
         frame = 0
     end
     self.frames = frame
