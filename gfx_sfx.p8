@@ -4,59 +4,64 @@ __lua__
 -- gfx testing code
 -- very crude and should not be learnt from :)
 palt(0,false); palt(14,true)
-counter2=0; sincount=0
-counter3=0; x=0; xflip=true
-megacounter=0 y=0; lsin=0
+titley=0; titlesin=0
 
-function _update()
- megacounter+=1; x+=1
- counter3+=0.3; counter2+=0.25
- sincount+=0.01
- if (flr(megacounter)==70) megacounter=0
- if (flr(x)==128) x=0
- if (counter3>3) counter3=0
- if flr(counter2)==2 then counter2=0; xflip=not xflip end
-end
-
+-- this function just returns the value
+-- of sin(value) multiplied by then but
+-- if the value is bigger then zero it
+-- sets it to zero to get the "jumping"
+-- effect
 function sinjump(a)
  b=sin(a)*10
  if b>0 then b=0 end
  return b
 end
 
+-- prints text with a black outline
 function printol(pstring,px,py,pcol)
- for ax=0,2 do
-  for ay=0,2 do
-   print(pstring,px+ax,py+ay,0)
-   print(pstring,px+1,py+1,pcol)
+ for printx=0,2 do
+  for printy=0,2 do
+   print(pstring,px+printx,py+printy,0)
   end
  end
+ print(pstring,px+1,py+1,pcol)
+end
+
+function drawlogo()
+ -- the
+ spr(192,38,16+sinjump(titley),2,2)
+ spr(194,56,16+sinjump(titley+0.9),2,2)
+ spr(196,74,16+sinjump(titley+0.8),2,2)
+ -- loot
+ spr(198,30,40+sinjump(titley+0.85),2,2)
+ spr(200,48,40+sinjump(titley+0.75),2,2)
+ spr(200,66,40+sinjump(titley+0.65),2,2)
+ spr(192,84,40+sinjump(titley+0.55),2,2)
+-- cave
+ spr(204,30,64+sinjump(titley+0.7),2,2)
+ spr(202,48,64+sinjump(titley+0.6),2,2)
+ spr(206,66,64+sinjump(titley+0.5),2,2)
+ spr(196,84,64+sinjump(titley+0.4),2,2)
 end
 
 function _draw()
- y+=0.01
- lsin+=0.005
--- rectfill(0,0,127,127,3)
- cls()
+ -- titlescreen draw loop, no need
+ -- for cls() since the entire screen
+ -- gets painted over anyway
+
+ titley+=0.01 -- speed of jumping letters
+ titlesin+=0.005 -- speed of the "camera"
+
+ -- this loop paints the background
  for lx=-2,17 do
   for ly=-2,17 do
-  	spr(224,lx*16+sin(lsin)*20,ly*16+sin(lsin/2+0.5)*20,2,2)
+  	spr(224,lx*16+sin(titlesin)*20,ly*16+sin(titlesin/2+0.5)*20,2,2)
   end
  end
- spr(192,38,16+sinjump(y),2,2)
- spr(194,56,16+sinjump(y+0.9),2,2)
- spr(196,74,16+sinjump(y+0.8),2,2)
- 
- spr(198,30,40+sinjump(y+0.85),2,2)
- spr(200,48,40+sinjump(y+0.75),2,2)
- spr(200,66,40+sinjump(y+0.65),2,2)
- spr(192,84,40+sinjump(y+0.55),2,2)
 
- spr(204,30,64+sinjump(y+0.7),2,2)
- spr(202,48,64+sinjump(y+0.6),2,2)
- spr(206,66,64+sinjump(y+0.5),2,2)
- spr(196,84,64+sinjump(y+0.4),2,2)
- 
+ -- draw the big "the loot cave"-logo
+ drawlogo()
+
  printol("press x to start",32,96,7)
  printol("by misato & jayminer",24,118,6)
 end
