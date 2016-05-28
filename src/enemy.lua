@@ -17,6 +17,8 @@ function Enemy.create(position, enemy_type)
 	new_enemy.y = 0
 	new_enemy.sprite = {}
 	new_enemy.position = 0
+	new_enemy.score = 10
+	new_enemy.health = 10
 
     new_enemy.frames = 0
 
@@ -52,8 +54,13 @@ end
 
 
 function Enemy:update()
-	self:update_frames()
-	self:update_coords()
+	if self.health <= 0 then
+		score += self.score
+		destroy_enemy(self)
+	else
+		self:update_frames()
+		self:update_coords()
+	end
 end
 
 function Enemy:update_frames()
@@ -66,34 +73,14 @@ function Enemy:update_frames()
 end
 
 function Enemy:update_coords()    
-    if self.position == POSITION_DOWN then
-        if (self.y + 1)  < (SCREEN_SIZE - WALL_SIZE) then
-            self.y += 1
-        else 
-        	self:move()
-        end
 
-    elseif self.position == POSITION_UP then
-        if (self.y - 1) > WALL_SIZE then
-            self.y -= 1
-        else 
-        	self:move()
-        end
-
-    elseif self.position == POSITION_RIGHT then
-        if (self.x + 1) < (SCREEN_SIZE - WALL_SIZE) then
-            self.x += 1
-        else 
-        	self:move()
-        end
-
-    elseif self.position == POSITION_LEFT then
-        if (self.x - 1) > WALL_SIZE then
-            self.x -= 1
-        else 
-        	self:move()
-        end
-    end
+	local new_x, new_y = calculate_sprite_movement(self.x, self.y, 1, self.position)
+	if new_x != self.x or new_y != self.y then
+		self.x = new_x
+		self.y = new_y
+	else 
+		self:move()
+	end
 
 end
 
@@ -119,6 +106,10 @@ end
 
 enemy_list = {}
 
+function destroy_enemy(enemy)
+	del(enemy_list, enemy)
+end
+
 function spawn_enemy(position) 
 	local enemy_type = flr(rnd(4)) + 1
 	local new_enemy =  Enemy.create(position, enemy_type)
@@ -126,13 +117,44 @@ function spawn_enemy(position)
 end
 
 function enemies_update() 
-	for enemy in all(enemy_list) do
-		enemy:update()
+	if #enemy_list > 0 then
+		for enemy in all(enemy_list) do
+			enemy:update()
+		end
+	else
+		spawn_wave(wave)
+		wave += 1 
 	end
 end
 
 function enemies_draw()
-	for enemy in all(enemy_list) do
-		enemy:draw()
+	if #enemy_list > 0 then
+		for enemy in all(enemy_list) do
+			enemy:draw()
+		end
 	end
+end
+
+function spawn_wave(number)
+	local BASE_ENEMIES_PER_WAVE = 4
+	for i=1, BASE_ENEMIES_PER_WAVE+number*2 do
+		local position = flr(rnd(4))+1
+		spawn_enemy(position)
+	end
+end
+
+function enemy_in_coords(x,y, weapon_power)
+	local tile_x = flr(x / 8)
+	local tile_y = flr(y / 8)
+	local collision = false
+	for enemy in all(enemy_list) do
+		local enemy_tile_x = flr(enemy.x / 8)
+		local enemy_tile_y = flr(enemy.y / 8)
+		if enemy_tile_x == tile_x and enemy_tile_y == tile_y then
+			enemy.health -= weapon_power
+			collision = true
+			break
+		end
+	end
+	return collision
 end

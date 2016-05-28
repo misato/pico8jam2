@@ -9,25 +9,30 @@ POSITION_UP = 2
 POSITION_RIGHT = 3
 POSITION_LEFT = 4
 
+wave = 0
+stage = 0
+score = 0
+
 function calculate_sprite_movement(x,y,speed,position)
     local new_y = y
     local new_x = x
-     if position == POSITION_DOWN then
-        if (y + speed)  < (SCREEN_SIZE - WALL_SIZE) then
+
+    if position == POSITION_DOWN then
+        if (new_y + speed)  < (SCREEN_SIZE - WALL_SIZE) then
             new_y += speed
         end
 
     elseif position == POSITION_UP then
-        if (y - speed) > WALL_SIZE then
+        if (new_y - speed) > WALL_SIZE then
             new_y -= speed
         end
 
     elseif position == POSITION_RIGHT then
-        if (x + speed) < (SCREEN_SIZE - WALL_SIZE) then
+        if (new_x + speed) < (SCREEN_SIZE - WALL_SIZE) then
             new_x += speed
         end 
     elseif position == POSITION_LEFT then
-        if (x - speed) > WALL_SIZE then
+        if (new_x - speed) > WALL_SIZE then
             new_x -= speed
         end
     end
@@ -56,11 +61,6 @@ function change_state()
     if state == game_states.splash then 
         -- change from splash to game
         -- spawn some enemies
-        spawn_enemy(POSITION_UP)
-        spawn_enemy(POSITION_DOWN)
-        spawn_enemy(POSITION_LEFT)
-        spawn_enemy(POSITION_RIGHT)
-        
         state = game_states.game
     elseif state == game_states.game then
         state = game_states.gameover 
@@ -121,6 +121,7 @@ end
 
 function draw_game()
     map(0,0)
+    write_score()
     player.draw()
     bolts_draw()
     enemies_draw()
@@ -154,4 +155,11 @@ function write_centered_text(text)
     print(text, x, y)
 end
 
+function mod(a,b)
+   return a - flr(a/b)*b
+end
+
+function write_score()
+    print(score,2,2,0)
+end
 

@@ -10,6 +10,7 @@ function Lightning.create(x,y,direction)
     bolt.y = y
     bolt.direction = direction
     bolt.speed = 8
+    bolt.power = 1
 
     -- 119,120,121
     -- 125,126,127
@@ -36,62 +37,67 @@ function Lightning:update()
     end
 end
 
-function Lightning:check_collision() 
-
+function Lightning:split()
     if self.direction == POSITION_DOWN then
-        if (self.y + self.speed)  < (SCREEN_SIZE - WALL_SIZE) then
-            
-            self.y += self.speed
-            can_move = true
-        end
-
+        add_lightning(self.x, self.y + self.speed, POSITION_LEFT)
+        add_lightning(self.x, self.y + self.speed, POSITION_RIGHT)
     elseif self.direction == POSITION_UP then
-        if (self.y - self.speed) > WALL_SIZE then
-            self.y -= self.speed
-            can_move = true
-        end
-
-    elseif self.direction == POSITION_RIGHT then
-        if (self.x + self.speed) < (SCREEN_SIZE - WALL_SIZE) then
-            self.x += self.speed
-            can_move = true
-        end
-
+        add_lightning(self.x, self.y - self.speed, POSITION_LEFT)
+        add_lightning(self.x, self.y - self.speed, POSITION_RIGHT)
     elseif self.direction == POSITION_LEFT then
-        if (self.x - self.speed) > WALL_SIZE then
-            self.x -= self.speed
-            can_move = true
-        end
+        add_lightning(self.x - self.speed, self.y, POSITION_UP)
+        add_lightning(self.x - self.speed, self.y, POSITION_DOWN)
+    elseif self.direction == POSITION_RIGHT then
+        add_lightning(self.x + self.speed, self.y, POSITION_UP)
+        add_lightning(self.x + self.speed, self.y, POSITION_DOWN)
     end
-
 end
 
 function Lightning:move()
-    -- printh("move")
-
     local has_moved = false
+
     if self.direction == POSITION_DOWN then
         if (self.y + self.speed)  < (SCREEN_SIZE - WALL_SIZE) then
-            self.y += self.speed
-            has_moved = true
+            local collision = enemy_in_coords(self.x, self.y + self.speed, self.power)
+            if collision then 
+                self:split()
+            else
+                self.y += self.speed
+                has_moved = true
+            end
         end
 
     elseif self.direction == POSITION_UP then
         if (self.y - self.speed) > WALL_SIZE then
-            self.y -= self.speed
-            has_moved = true
+            local collision = enemy_in_coords(self.x, self.y - self.speed,self.power)
+            if collision then 
+                self:split()
+            else
+                self.y -= self.speed
+                has_moved = true
+            end
         end
 
     elseif self.direction == POSITION_RIGHT then
         if (self.x + self.speed) < (SCREEN_SIZE - WALL_SIZE) then
-            self.x += self.speed
-            has_moved = true
+            local collision = enemy_in_coords(self.x + self.speed, self.y, self.power)
+            if collision then 
+                self:split()
+            else
+                self.x += self.speed
+                has_moved = true
+            end
         end
 
     elseif self.direction == POSITION_LEFT then
         if (self.x - self.speed) > WALL_SIZE then
-            self.x -= self.speed
-            has_moved = true
+            local collision = enemy_in_coords(self.x + self.speed, self.y, self.power)
+            if collision then 
+                self:split()
+            else
+                self.x -= self.speed
+                has_moved = true
+            end
         end
     end
 
@@ -105,7 +111,6 @@ end
 bolt_list = {}
 
 function add_lightning(x,y,direction)
-    -- printh("create with x: "..x.." y: "..y.." direction: "..direction)
     local bolt = Lightning.create(x,y,direction)
     add(bolt_list, bolt)
 end

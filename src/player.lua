@@ -45,26 +45,10 @@ end
 
 
 function update_player_coords() 
-    
-    if player.position == POSITION_DOWN then
-        if (player.y + 1)  < (SCREEN_SIZE - WALL_SIZE) then
-            player.y += 1
-        end
 
-    elseif player.position == POSITION_UP then
-        if (player.y - 1) > WALL_SIZE then
-            player.y -= 1
-        end
-
-    elseif player.position == POSITION_RIGHT then
-        if (player.x + 1) < (SCREEN_SIZE - WALL_SIZE) then
-            player.x += 1
-        end 
-    elseif player.position == POSITION_LEFT then
-        if (player.x - 1) > WALL_SIZE then
-            player.x -= 1
-        end
-    end
+    local new_x, new_y = calculate_sprite_movement(player.x, player.y, 1, player.position)
+    player.x = new_x
+    player.y = new_y
 
 end
 
