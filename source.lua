@@ -1,6 +1,7 @@
 -- Global 
 
 SCREEN_SIZE = 120 -- same width than height so no need for 2 vars ;) 
+WALL_SIZE = 8 -- there is a wall around the room. wall is 1 tile width
 
 -- defined here so it's easier to work with positions later
 POSITION_DOWN = 1
@@ -8,9 +9,35 @@ POSITION_UP = 2
 POSITION_RIGHT = 3
 POSITION_LEFT = 4
 
+function calculate_sprite_movement(x,y,speed,position)
+    local new_y = y
+    local new_x = x
+     if position == POSITION_DOWN then
+        if (y + speed)  < (SCREEN_SIZE - WALL_SIZE) then
+            new_y += speed
+        end
+
+    elseif position == POSITION_UP then
+        if (y - speed) > WALL_SIZE then
+            new_y -= speed
+        end
+
+    elseif position == POSITION_RIGHT then
+        if (x + speed) < (SCREEN_SIZE - WALL_SIZE) then
+            new_x += speed
+        end 
+    elseif position == POSITION_LEFT then
+        if (x - speed) > WALL_SIZE then
+            new_x -= speed
+        end
+    end
+
+    return new_x, new_y
+end
 
 include src/player.lua
 include src/enemy.lua
+include src/lightning.lua
 
 -- state machine 
 
@@ -88,12 +115,14 @@ end
 
 function update_game()
     player.update()
+    bolts_update()
     enemies_update()
 end
 
 function draw_game()
     map(0,0)
     player.draw()
+    bolts_draw()
     enemies_draw()
 end
 

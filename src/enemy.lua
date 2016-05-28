@@ -31,7 +31,6 @@ function Enemy.create(position, enemy_type)
 		new_enemy.sprite = {105,107,109}
 	end
 
-	printh("received position: "..position)
 	new_enemy.position = position
 	if position == POSITION_DOWN then 
 		new_enemy.x = SCREEN_SIZE/2
@@ -66,10 +65,7 @@ function Enemy:update_frames()
     self.frames = frame
 end
 
-function Enemy:update_coords() 
-    -- there is a wall around the room. wall is 1 tile width
-    local WALL_SIZE = 8
-    
+function Enemy:update_coords()    
     if self.position == POSITION_DOWN then
         if (self.y + 1)  < (SCREEN_SIZE - WALL_SIZE) then
             self.y += 1
@@ -125,7 +121,6 @@ enemy_list = {}
 
 function spawn_enemy(position) 
 	local enemy_type = flr(rnd(4)) + 1
-	printh("---> position "..position)
 	local new_enemy =  Enemy.create(position, enemy_type)
 	add(enemy_list, new_enemy)
 end

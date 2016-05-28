@@ -29,13 +29,22 @@ function handle_player_input()
         is_moving = false 
     end
 
+    if btn(4) or btn(5) then
+        -- shoot
+       shoot_lightning()
+    end
+
     return is_moving
+end
+
+function shoot_lightning()
+    -- calculate new coordinates for the bolt
+    local new_x, new_y = calculate_sprite_movement(player.x, player.y, 1, player.position)
+    add_lightning(new_x, new_y, player.position)
 end
 
 
 function update_player_coords() 
-    -- there is a wall around the room. wall is 1 tile width
-    local WALL_SIZE = 8
     
     if player.position == POSITION_DOWN then
         if (player.y + 1)  < (SCREEN_SIZE - WALL_SIZE) then
