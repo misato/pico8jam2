@@ -14,6 +14,7 @@ score = 0
 
 titlesin = 0
 titley = 0
+game_over_frames = 0
 
 
 function calculate_sprite_movement(x,y,speed,position)
@@ -53,6 +54,8 @@ function reset_game()
 
     titlesin = 0
     titley = 0
+
+    game_over_frames = 0
 
     -- Wave info
     wave = 0
@@ -155,7 +158,6 @@ function draw_splash()
 
     bgsinloop(224)
 
-
     -- the
     spr(192,38,16+sinjump(titley),2,2)
     spr(194,56,16+sinjump(titley+0.9),2,2)
@@ -170,7 +172,6 @@ function draw_splash()
     spr(202,48,64+sinjump(titley+0.6),2,2)
     spr(206,66,64+sinjump(titley+0.5),2,2)
     spr(196,84,64+sinjump(titley+0.4),2,2)
-
 
     rectfill(0,0,127,2,1)
     rectfill(0,122,127,127,1)
@@ -204,8 +205,12 @@ end
 -- game over
 
 function update_gameover()
-    if btn(4) or btn(5) then
-        change_state()
+    if game_over_frames > 30 then
+        if btn(4) or btn(5) then
+            change_state()
+        end
+    else
+        game_over_frames += 1 
     end
 end
 
@@ -274,12 +279,12 @@ end
 
 function draw_game_map()
     local map_x = 0 
-    -- if mod(wave+1, 5) == 0 then 
-    --     map_x = ((wave+1)/ 5) * 16
-    -- end
-    -- if map_x > 48 then
-    --     map_x = 0
-    -- end
+    if mod(wave+1, 5) == 0 then 
+        map_x = ((wave+1)/ 5) * 16
+    end
+    if map_x > 48 then
+        map_x = 0
+    end
     map(map_x,0)
 end
 
