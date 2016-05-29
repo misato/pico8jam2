@@ -271,15 +271,14 @@ function draw_player_lives()
 end
 
 function draw_game_map()
-    map(0,0)
-    local map_x = 16 
-    if mod(wave+1, 5) == 0 then 
-        map_x = ((wave+1)/ 5) * 16
-    end
-    if map_x > 48 then
-        map_x = 0
-    end
-    camera(map_x,0)
+    local map_x = 0 
+    -- if mod(wave+1, 5) == 0 then 
+    --     map_x = ((wave+1)/ 5) * 16
+    -- end
+    -- if map_x > 48 then
+    --     map_x = 0
+    -- end
+    map(map_x,0)
 end
 
 -- Title and GameOver helper functions
