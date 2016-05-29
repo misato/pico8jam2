@@ -161,7 +161,9 @@ function spawn_next_enemy_in_wave()
 			local position = flr(rnd(4))+1
 			spawn_enemy(position)
 			enemies_spawned += 1
-			show_wave_title = false
+			if show_wave_title and enemies_spawned > 1 then
+				show_wave_title = false
+			end
 		else
 			is_spawning = false
 			enemies_spawned = 0

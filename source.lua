@@ -190,7 +190,7 @@ function update_game()
 end
 
 function draw_game()
-    map(0,0)
+    draw_game_map()
     write_score()
     draw_player_lives()
     player.draw()
@@ -268,6 +268,14 @@ function draw_player_lives()
         spr(116,x,0)
         x -= 8
     end    
+end
+
+function draw_game_map()
+    local map_x = 0 
+    if mod(wave+1, 5) == 0 then 
+        map_x = ((wave+1)/ 5) * 16
+    end
+    map(map_x,0)
 end
 
 -- Title and GameOver helper functions
