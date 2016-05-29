@@ -56,6 +56,7 @@ player = {}
 player.x = 60
 player.y = 60
 player.frames = 0
+player.health = 3
 player.position = POSITION_DOWN
 player.sprite = { 64, 67, 70 } -- depending on the position
 player.update = function() 

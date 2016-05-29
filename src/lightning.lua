@@ -105,7 +105,7 @@ function Lightning:move()
 end
 
 function Lightning:draw()
-    spr(self.sprite, self.x, self.y)
+    spr(self.sprite, self.x, self.y, 1, 1, self.position == POSITION_RIGHT, self.position == POSITION_DOWN)
 end
 
 bolt_list = {}
