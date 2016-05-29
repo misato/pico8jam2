@@ -14,7 +14,7 @@ score = 0
 
 titlesin = 0
 titley = 0
-game_over_frames = 0
+screen_frames = 0
 
 
 function calculate_sprite_movement(x,y,speed,position)
@@ -55,7 +55,7 @@ function reset_game()
     titlesin = 0
     titley = 0
 
-    game_over_frames = 0
+    screen_frames = 0
 
     -- Wave info
     wave = 0
@@ -102,6 +102,7 @@ state = game_states.splash
 
 function change_state() 
     cls()
+    screen_frames = 0
     if state == game_states.splash then
         music(0)
         state = game_states.game
@@ -147,8 +148,12 @@ end
 -- splash
 
 function update_splash()
-    if btn(5) then
-        change_state()
+    if screen_frames < 30 then
+        screen_frames += 1
+    else 
+        if btn(5) then
+            change_state()
+        end
     end
 end
 
@@ -205,12 +210,12 @@ end
 -- game over
 
 function update_gameover()
-    if game_over_frames > 30 then
+    if screen_frames < 30 then
+        screen_frames += 1
+    else
         if btn(4) or btn(5) then
             change_state()
         end
-    else
-        game_over_frames += 1 
     end
 end
 
@@ -279,12 +284,12 @@ end
 
 function draw_game_map()
     local map_x = 0 
-    if mod(wave+1, 5) == 0 then 
-        map_x = ((wave+1)/ 5) * 16
-    end
-    if map_x > 48 then
-        map_x = 0
-    end
+    -- if mod(wave+1, 5) == 0 then 
+    --     map_x = ((wave+1)/ 5) * 16
+    -- end
+    -- if map_x > 48 then
+    --     map_x = 0
+    -- end
     map(map_x,0)
 end
 

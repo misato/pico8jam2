@@ -23,9 +23,9 @@ function Enemy.create(position, enemy_type)
 	new_enemy.x = 0
 	new_enemy.y = 0
 	new_enemy.sprite = {}
-	new_enemy.position = 0
+	new_enemy.position = POSITION_DOWN
 	new_enemy.score = 10
-	new_enemy.health = 10
+	new_enemy.health = 8
 
     new_enemy.frames = 0
 
@@ -84,20 +84,39 @@ function Enemy:update_coords()
 	if new_x != self.x or new_y != self.y then
 		self.x = new_x
 		self.y = new_y
-	else 
+
+		-- chance to move 
+		if flr(rnd(2)) == 1 then
+			self.move()
+		end
+	else
 		self:move()
 	end
-
 end
 
 function Enemy:move()
 	-- update enemy position
-    self.position = flr(rnd(4)) + 1
+	if self == nil then
+		return
+	end
+
+	if flr(rnd(2)) == 1 then 
+		if self.x > player.x then 
+			self.position = POSITION_LEFT
+		elseif self.x < player.x then
+			self.position = POSITION_RIGHT
+		elseif self.y > player.y then
+			self.position = POSITION_UP
+		elseif self.y < player.y then 
+			self.position = POSITION_DOWN
+		end
+	else
+	    self.position = flr(rnd(4)) + 1
+	end
 end
 
 function Enemy:draw()
 	local enemy_frame = flr(self.frames)
-	-- printh("enemy_frame: "..enemy_frame)
     local mirror = false -- used to mirror the sprite for the left position
     local position = self.position 
     --  if the enemy position is left, then we want the right sprite but mirrored
