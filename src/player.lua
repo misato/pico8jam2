@@ -56,6 +56,8 @@ player.x = 60
 player.y = 60
 player.frames = 0
 player.health = 5
+player.inmune = true
+player.inmune_frames = 0
 player.position = POSITION_DOWN
 player.sprite = { 64, 67, 70 } -- depending on the position
 player.update = function()
@@ -67,15 +69,17 @@ player.update = function()
             player.frames = 1 -- idle position
         end 
 
-        if is_enemy_in_coords(player.x, player.y) then
+        if not player.inmune and is_enemy_in_coords(player.x, player.y) then
             player.health -= 1
+            player.inmune = true
+            player.inmune_frames = 0
         end
     else
         change_state()
     end
 end
 
-player.draw = function()
+function draw_player_sprite()
     -- we want the animation to be "bouncing". ie 64, 65, 66 and 65 again
     local player_frame = flr(player.frames)
     if player_frame == 3 then
@@ -90,5 +94,21 @@ player.draw = function()
     end
     local sprite = player.sprite[position] + player_frame
     spr(sprite,player.x, player.y, 1, 1, mirror, false)
+end
+
+player.draw = function()
+    
+    if player.inmune then
+        player.inmune_frames += 1
+        if mod(player.inmune_frames, 3) == 0 then
+            draw_player_sprite()
+        end
+        if player.inmune_frames > 20 then
+            player.inmune = false
+            player.inmune_frames = 0
+        end
+    else
+        draw_player_sprite()
+    end
 end
 

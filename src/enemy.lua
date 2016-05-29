@@ -133,8 +133,7 @@ function enemies_update()
 			enemy:update()
 		end
 	else
-		is_spawning = true
-		show_wave_title = true
+		start_spawn_wave()
 	end
 end
 
@@ -150,6 +149,16 @@ function enemies_draw()
 			enemy:draw()
 		end
 	end
+end
+
+function start_spawn_wave()
+	is_spawning = true
+	show_wave_title = true
+
+	player.inmune = true
+	player.inmune_frames = 0
+	player.x = 60
+	player.y = 60
 end
 
 function spawn_next_enemy_in_wave()

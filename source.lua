@@ -66,6 +66,8 @@ function reset_game()
     player.y = 60
     player.frames = 0
     player.health = 5
+    player.inmune = true
+    player.inmune_frames = 0
     player.position = POSITION_DOWN
 
     -- delete enemies
