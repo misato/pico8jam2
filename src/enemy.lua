@@ -114,6 +114,7 @@ end
 enemy_list = {}
 
 function destroy_enemy(enemy)
+	sfx(0)
 	del(enemy_list, enemy)
 end
 

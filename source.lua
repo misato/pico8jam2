@@ -100,14 +100,14 @@ state = game_states.splash
 function change_state() 
     cls()
     if state == game_states.splash then
-        -- music(0)
+        music(0)
         state = game_states.game
     elseif state == game_states.game then
-        -- music(12)
+        music(12)
         state = game_states.gameover 
     elseif state == game_states.gameover then
         reset_game()
-        -- music(8)
+        music(8)
         state = game_states.splash
     end
 end
@@ -117,7 +117,7 @@ end
 function _init()
     cls()
     palt(0,false); palt(14,true)
-    -- music(8)
+    music(8)
 end
 
 function _update()

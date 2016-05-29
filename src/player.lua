@@ -39,6 +39,7 @@ end
 
 function shoot_lightning()
     -- calculate new coordinates for the bolt
+    sfx(2)
     local new_x, new_y = calculate_sprite_movement(player.x, player.y, 1, player.position)
     add_lightning(new_x, new_y, player.position)
 end
@@ -70,6 +71,7 @@ player.update = function()
         end 
 
         if not player.inmune and is_enemy_in_coords(player.x, player.y) then
+            sfx(1)
             player.health -= 1
             player.inmune = true
             player.inmune_frames = 0
