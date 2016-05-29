@@ -10,12 +10,10 @@ POSITION_RIGHT = 3
 POSITION_LEFT = 4
 
 wave = 0
-stage = 0
 score = 0
 
 titlesin = 0
 titley = 0
-
 
 
 function calculate_sprite_movement(x,y,speed,position)
@@ -49,6 +47,42 @@ include src/player.lua
 include src/enemy.lua
 include src/lightning.lua
 
+
+function reset_game()
+    score = 0
+
+    titlesin = 0
+    titley = 0
+
+    -- Wave info
+    wave = 0
+    is_spawning = false
+    enemies_spawned = 0
+    spawning_wave_rate = 0
+    show_wave_title = false
+
+    -- player info
+    player.x = 60
+    player.y = 60
+    player.frames = 0
+    player.health = 5
+    player.position = POSITION_DOWN
+
+    -- delete enemies
+    if #enemy_list > 0 then
+        for enemy in all(enemy_list) do
+            destroy_enemy(enemy)
+        end
+    end
+
+    -- delete lighning
+    if #bolt_list > 0 then
+        for bolt in all(bolt_list) do
+            destroy_bolt(bolt)
+        end
+    end
+end
+
 -- state machine 
 
 -- game states
@@ -70,7 +104,8 @@ function change_state()
         -- music(12)
         state = game_states.gameover 
     elseif state == game_states.gameover then
-        music(8)
+        reset_game()
+        -- music(8)
         state = game_states.splash
     end
 end
@@ -227,13 +262,11 @@ end
 
 function draw_player_lives()
 
-    -- local sprite = 65
-    local sprite = 116
-    local x = 96
+    local x = SCREEN_SIZE
 
     for i= 1,player.health do
-        spr(sprite,x,0)
-        x += 8
+        spr(116,x,0)
+        x -= 8
     end    
 end
 

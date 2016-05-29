@@ -45,7 +45,6 @@ end
 
 
 function update_player_coords() 
-
     local new_x, new_y = calculate_sprite_movement(player.x, player.y, 1, player.position)
     player.x = new_x
     player.y = new_y
@@ -56,17 +55,24 @@ player = {}
 player.x = 60
 player.y = 60
 player.frames = 0
-player.health = 3
+player.health = 5
 player.position = POSITION_DOWN
 player.sprite = { 64, 67, 70 } -- depending on the position
-player.update = function() 
-    local is_moving = handle_player_input()
-    if is_moving then
-        update_player_frames()
-        update_player_coords()
+player.update = function()
+    if player.health > 0 then
+        if handle_player_input() then
+            update_player_frames()
+            update_player_coords()
+        else
+            player.frames = 1 -- idle position
+        end 
+
+        if is_enemy_in_coords(player.x, player.y) then
+            player.health -= 1
+        end
     else
-        player.frames = 1 -- idle position
-    end 
+        change_state()
+    end
 end
 
 player.draw = function()

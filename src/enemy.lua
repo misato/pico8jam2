@@ -1,3 +1,10 @@
+-- Wave info
+is_spawning = false
+enemies_spawned = 0
+BASE_ENEMIES_PER_WAVE = 4
+spawning_wave_rate = 0
+show_wave_title = false
+
 -- Enemy
 
 ENEMY_TYPE_1 = 1
@@ -48,7 +55,6 @@ function Enemy.create(position, enemy_type)
 		new_enemy.y = SCREEN_SIZE/2
 	end
 
-
 	return new_enemy
 end
 
@@ -66,7 +72,7 @@ end
 function Enemy:update_frames()
     local frame = self.frames
     frame += 0.1
-    if flr(frame) == 3 then 
+    if flr(frame) == 2 then 
         frame = 0
     end
     self.frames = frame
@@ -91,6 +97,7 @@ end
 
 function Enemy:draw()
 	local enemy_frame = flr(self.frames)
+	-- printh("enemy_frame: "..enemy_frame)
     local mirror = false -- used to mirror the sprite for the left position
     local position = self.position 
     --  if the enemy position is left, then we want the right sprite but mirrored
@@ -117,17 +124,27 @@ function spawn_enemy(position)
 end
 
 function enemies_update() 
+	if is_spawning == true then
+		spawn_next_enemy_in_wave()
+	end
+
 	if #enemy_list > 0 then
 		for enemy in all(enemy_list) do
 			enemy:update()
 		end
 	else
-		spawn_wave(wave)
-		wave += 1 
+		is_spawning = true
+		show_wave_title = true
 	end
 end
 
 function enemies_draw()
+	if show_wave_title then
+		local text = "wave "..wave+1
+		local text_x = (SCREEN_SIZE - #text * 4) / 2
+		printol(text,text_x,32,9)
+	end
+
 	if #enemy_list > 0 then
 		for enemy in all(enemy_list) do
 			enemy:draw()
@@ -135,15 +152,43 @@ function enemies_draw()
 	end
 end
 
-function spawn_wave(number)
-	local BASE_ENEMIES_PER_WAVE = 4
-	for i=1, BASE_ENEMIES_PER_WAVE+number*2 do
-		local position = flr(rnd(4))+1
-		spawn_enemy(position)
+function spawn_next_enemy_in_wave()
+
+	spawning_wave_rate += 0.1
+	if spawning_wave_rate >= 1 then
+		spawning_wave_rate = 0
+		if enemies_spawned < BASE_ENEMIES_PER_WAVE + wave*2 then
+			local position = flr(rnd(4))+1
+			spawn_enemy(position)
+			enemies_spawned += 1
+			show_wave_title = false
+		else
+			is_spawning = false
+			enemies_spawned = 0
+			wave += 1
+			spawning_wave_rate = 0
+		end
 	end
+
 end
 
-function enemy_in_coords(x,y, weapon_power)
+function is_enemy_in_coords(x,y)
+	local tile_x = flr(x / 8)
+	local tile_y = flr(y / 8)
+	local collision = false
+	for enemy in all(enemy_list) do
+		local enemy_tile_x = flr(enemy.x / 8)
+		local enemy_tile_y = flr(enemy.y / 8)
+		if enemy_tile_x == tile_x and enemy_tile_y == tile_y then
+			collision = true
+			break
+		end
+	end
+
+	return collision
+end
+
+function weapon_collides_with_enemy(x,y, weapon_power)
 	local tile_x = flr(x / 8)
 	local tile_y = flr(y / 8)
 	local collision = false

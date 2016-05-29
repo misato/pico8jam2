@@ -25,12 +25,10 @@ function Lightning.create(x,y,direction)
 end
 
 function destroy_bolt(bolt)
-    -- printh("destroy")
     del(bolt_list,bolt)
 end
 
 function Lightning:update()
-    -- printh("update")
     local has_moved = self:move()
     if not has_moved then
         destroy_bolt(self)
@@ -58,7 +56,7 @@ function Lightning:move()
 
     if self.direction == POSITION_DOWN then
         if (self.y + self.speed)  < (SCREEN_SIZE - WALL_SIZE) then
-            local collision = enemy_in_coords(self.x, self.y + self.speed, self.power)
+            local collision = weapon_collides_with_enemy(self.x, self.y + self.speed, self.power)
             if collision then 
                 self:split()
             else
@@ -69,7 +67,7 @@ function Lightning:move()
 
     elseif self.direction == POSITION_UP then
         if (self.y - self.speed) > WALL_SIZE then
-            local collision = enemy_in_coords(self.x, self.y - self.speed,self.power)
+            local collision = weapon_collides_with_enemy(self.x, self.y - self.speed,self.power)
             if collision then 
                 self:split()
             else
@@ -80,7 +78,7 @@ function Lightning:move()
 
     elseif self.direction == POSITION_RIGHT then
         if (self.x + self.speed) < (SCREEN_SIZE - WALL_SIZE) then
-            local collision = enemy_in_coords(self.x + self.speed, self.y, self.power)
+            local collision = weapon_collides_with_enemy(self.x + self.speed, self.y, self.power)
             if collision then 
                 self:split()
             else
@@ -91,7 +89,7 @@ function Lightning:move()
 
     elseif self.direction == POSITION_LEFT then
         if (self.x - self.speed) > WALL_SIZE then
-            local collision = enemy_in_coords(self.x + self.speed, self.y, self.power)
+            local collision = weapon_collides_with_enemy(self.x + self.speed, self.y, self.power)
             if collision then 
                 self:split()
             else
@@ -116,7 +114,6 @@ function add_lightning(x,y,direction)
 end
 
 function bolts_update()
-    -- printh("update")
     if #bolt_list > 0 then
         for bolt in all(bolt_list) do
             bolt:update()
